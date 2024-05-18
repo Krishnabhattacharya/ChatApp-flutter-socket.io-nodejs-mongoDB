@@ -1,11 +1,11 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
-require('dotenv').config();
+
 const path = require('path');
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: "delcuaej9",
+    api_key: "422144646849997",
+    api_secret: "zEezg3eX2KK9zuaS_TggwaDoIEs",
 });
 
 async function uploadToCloudinary(localFilePath) {
@@ -30,14 +30,7 @@ async function uploadToCloudinary(localFilePath) {
         console.error("Error uploading file:", error.message);
         return { message: "Fail" };
     }
-    finally {
-        try {
-            fs.unlinkSync(localFilePath);
-            console.log("File deleted successfully");
-        } catch (err) {
-            console.error("Error deleting file:", err);
-        }
-    }
+
 }
 
 module.exports = uploadToCloudinary;

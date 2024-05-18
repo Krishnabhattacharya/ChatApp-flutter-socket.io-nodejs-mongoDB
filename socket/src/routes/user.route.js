@@ -1,8 +1,9 @@
 const express = require('express');
-const { register, login } = require('../controller/user.controller.js');
+const { register, login, getAllUsersExceptCurrent, saveChat } = require('../controller/user.controller.js');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const authMiddleware = require('../middleware/user.middleware.js');
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -18,4 +19,6 @@ const upload = multer({ storage: storage });
 
 router.post('/auth/register', upload.single('image'), register);
 router.post('/auth/login', login);
+router.post('/save-chat', saveChat);
+router.get('/auth/getAllUsersExceptCurrent/:id', authMiddleware, getAllUsersExceptCurrent);
 module.exports = router;

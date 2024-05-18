@@ -1,6 +1,6 @@
 const User = require('../models/user.model.js');
 const uploadToCloudinary = require('../utils/upload_file.js');
-
+const Chat = require('../models/chat.model.js')
 const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -51,7 +51,7 @@ const login = async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(401).send({
+            return res.status(401).send({
                 success: true,
                 message: "user not found",
             })
@@ -76,4 +76,42 @@ const login = async (req, res) => {
         })
     }
 }
-module.exports = { register, login };
+const getAllUsersExceptCurrent = async (req, res) => {
+    try {
+        const currentUserId = req.params.id;
+        const users = await User.find({ _id: { $ne: currentUserId } });
+        res.status(200).send({
+            success: true,
+            user: users
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).send({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+const saveChat = async (req, res) => {
+    try {
+        let chat = new Chat({
+            senderId: req.body.senderId,
+            reciverId: req.body.reciverId,
+            message: req.body.message
+        })
+        let newChat = await chat.save();
+        res.status(200).send({
+            success: true,
+            chat: newChat
+        })
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).send({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+module.exports = { register, login, getAllUsersExceptCurrent, saveChat };
+
+

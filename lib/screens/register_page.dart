@@ -1,15 +1,16 @@
 import 'dart:io';
 import 'package:chat_app_socket_flutter/screens/dashboard.dart';
+import 'package:chat_app_socket_flutter/screens/login_page.dart';
 import 'package:chat_app_socket_flutter/services/ApiServices/api_services.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   File? _imageFile;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -40,6 +41,19 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Center(
+              child: GestureDetector(
+                onTap: _getImage,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: _imageFile != null
+                      ? FileImage(_imageFile!)
+                      : const AssetImage('assets/Vector (1).png')
+                          as ImageProvider,
+                ),
+              ),
+            ),
             TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -67,29 +81,44 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20.0),
             Row(
               children: [
+                // Expanded(
+                //   child: ElevatedButton(
+                //     onPressed: () {},
+                //     child: Text('Login'),
+                //   ),
+                // ),
+                const SizedBox(width: 10.0),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Apiservices.loginUser(
+                      // _registerUser();
+                      Apiservices.signupUser(
+                              name: _nameController.text,
                               email: _emailController.text,
                               password: _passwordController.text,
+                              filepath: _imageFile!,
                               context: context)
                           .then((value) {
                         if (value) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Dashboard()));
+                                  builder: (context) => LoginPage()));
                         }
                       });
                     },
-                    child: Text('Login'),
+                    child: const Text('Sign Up'),
                   ),
                 ),
-                const SizedBox(width: 10.0),
               ],
             ),
             const SizedBox(height: 20.0),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+                child: Text("Login"))
           ],
         ),
       ),
