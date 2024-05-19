@@ -12,7 +12,11 @@ const chatSchema = mongoose.Schema({
         type: String,
         requireed: true,
     },
-
+    status: {
+        type: String,
+        enum: ['not seen', 'seen'],
+        default: 'not seen'
+    }
 }, { timestamps: true });
 const Chat = mongoose.model('Chat', chatSchema);
 module.exports = Chat;

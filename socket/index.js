@@ -1,3 +1,4 @@
+
 const express = require("express");
 const http = require('http');
 const socketio = require('socket.io');
@@ -43,11 +44,10 @@ nameSpace.on('connection', async (socket) => {
         try {
             let chats = await Chat.find({
                 $or: [
-                    { senderId: data.senderId },
-                    { reciverId: data.reciverId }
+                    { senderId: data.senderId, reciverId: data.reciverId },
+                    { senderId: data.reciverId, reciverId: data.senderId }
                 ]
-            }).lean(); // Convert Mongoose documents to plain JavaScript objects
-            console.log(chats);
+            }).lean();
             socket.emit("loadOldMessage", { chats: chats });
         } catch (error) {
             console.error("Error fetching old messages:", error);
