@@ -60,6 +60,13 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    socket!.disconnect();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

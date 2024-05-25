@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:chat_app_socket_flutter/models/get_all_user_model.dart';
 import 'package:chat_app_socket_flutter/models/user_model.dart';
-import 'package:chat_app_socket_flutter/screens/chat_model.dart';
+import 'package:chat_app_socket_flutter/models/chat_model.dart';
 import 'package:chat_app_socket_flutter/services/ApiServices/ApiBaseServices.dart';
 import 'package:chat_app_socket_flutter/services/SharedServices/Sharedservices.dart';
 import 'package:chat_app_socket_flutter/utils/dio_error.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Apiservices {
   static Future<bool> loginUser({
@@ -121,16 +123,27 @@ class Apiservices {
   }
 
   //---------------
-  static Future<ChatModel> chatRes(
-      BuildContext context, String rID, String sID, String msg) async {
-    ChatModel chatList = ChatModel();
+  static Future<ChatModel?> chatRes(BuildContext context, String rID,
+      String sID, String msg, XFile? image) async {
+    ChatModel? chatList;
     try {
-      final res = await ApiBaseServices.postRequest(
-          endPoint: "/save-chat",
-          body: {"senderId": sID, "reciverId": rID, "message": msg});
+      FormData formData = FormData.fromMap({
+        'senderId': sID,
+        'reciverId': rID,
+        'message': msg,
+        'image': image != null
+            ? await MultipartFile.fromFile(image.path, filename: image.name)
+            : null,
+      });
+
+      final res = await ApiBaseServices.postRequestWithFile(
+        endPoint: "/save-chat",
+        body: formData,
+      );
+
       if (res.statusCode == 200) {
         chatList = chatModelFromJson(jsonEncode(res.data));
-        log(chatList.chat!.message.toString());
+        log(chatList.toString());
       }
     } catch (e) {
       if (e is DioException) {

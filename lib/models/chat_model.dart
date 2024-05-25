@@ -32,6 +32,8 @@ class Chat {
   String? senderId;
   String? reciverId;
   String? message;
+  String? image;
+  String? status;
   String? id;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -41,6 +43,8 @@ class Chat {
     this.senderId,
     this.reciverId,
     this.message,
+    this.image,
+    this.status,
     this.id,
     this.createdAt,
     this.updatedAt,
@@ -51,6 +55,8 @@ class Chat {
         senderId: json["senderId"],
         reciverId: json["reciverId"],
         message: json["message"],
+        image: json["image"],
+        status: json["status"],
         id: json["_id"],
         createdAt: json["createdAt"] == null
             ? null
@@ -65,6 +71,8 @@ class Chat {
         "senderId": senderId,
         "reciverId": reciverId,
         "message": message,
+        "image": image,
+        "status": status,
         "_id": id,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),

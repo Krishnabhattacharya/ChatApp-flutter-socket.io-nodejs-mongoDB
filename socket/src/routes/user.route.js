@@ -19,6 +19,6 @@ const upload = multer({ storage: storage });
 
 router.post('/auth/register', upload.single('image'), register);
 router.post('/auth/login', login);
-router.post('/save-chat', saveChat);
+router.post('/save-chat', upload.single('image'), saveChat);
 router.get('/auth/getAllUsersExceptCurrent/:id', authMiddleware, getAllUsersExceptCurrent);
 module.exports = router;

@@ -94,18 +94,33 @@ const getAllUsersExceptCurrent = async (req, res) => {
 };
 const saveChat = async (req, res) => {
     try {
-        let chat = new Chat({
+        let imageUploadResult = { url: null };
+        if (req.file) {
+            imageUploadResult = await uploadToCloudinary(req.file.path);
+            console.log(imageUploadResult);
+            if (imageUploadResult.message !== 'Success') {
+                return res.status(500).send({ message: "Failed to upload image" });
+            }
+        }
+
+        let chatData = {
             senderId: req.body.senderId,
             reciverId: req.body.reciverId,
-            message: req.body.message
-        })
+            message: req.body.message,
+        };
+
+        if (imageUploadResult.url) {
+            chatData.image = imageUploadResult.url;
+        }
+
+        let chat = new Chat(chatData);
         let newChat = await chat.save();
         res.status(200).send({
             success: true,
             chat: newChat
-        })
+        });
     } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error saving chat:", error);
         res.status(500).send({
             success: false,
             message: "Internal server error"

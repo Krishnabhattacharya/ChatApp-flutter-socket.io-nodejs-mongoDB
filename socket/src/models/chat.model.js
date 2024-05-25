@@ -10,7 +10,10 @@ const chatSchema = mongoose.Schema({
     },
     message: {
         type: String,
-        requireed: true,
+
+    },
+    image: {
+        type: String,
     },
     status: {
         type: String,
